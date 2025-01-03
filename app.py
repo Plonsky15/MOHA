@@ -7,6 +7,7 @@ from langchain_experimental.utilities import PythonREPL
 from langchain_openai import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from dotenv import load_dotenv
+from io import BytesIO
 from system_message import messages
 
 load_dotenv()
@@ -106,6 +107,17 @@ if user_prompt:
 			# Prepare messages for the agent and get response
 			messages.append({"role": "user", "content": user_prompt})
 			response = pandas_df_agent.invoke(messages)
+
+			if "plot" in user_prompt:
+				fig = plt.gcf()  # Get current figure
+				buf = BytesIO()  # convert to bytesio
+				fig.savefig(buf, format="png")
+				buf.seek(0)
+
+				# Append plot to chat history
+				st.session_state.chat_history.append({"role": "assistant", "plot": buf})
+				st.image(buf, use_column_width=True)
+			return response["output"]
 
 		else:
 			messages.append({"role": "user", "content": user_prompt})
