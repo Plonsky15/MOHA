@@ -114,12 +114,12 @@ if st.session_state.mode == "chat":
 					max_time=60,
 					handle_parsing_errors=True
 				)
-
+##
 				# Prepare messages for the agent and get response
 				messages.append({"role": "user", "content": user_prompt})
 				response = pandas_df_agent.invoke(messages)
 				return response["output"]
-
+##
 			else:
 				messages.append({"role": "user", "content": user_prompt})
 				response = general_llm(messages)
